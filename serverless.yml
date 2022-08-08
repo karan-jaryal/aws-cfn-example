@@ -1,0 +1,26 @@
+service: serverless-custom-resources
+
+custom:
+  stage: "${opt:stage,'tst'}"
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  stage: "${self:custom.stage}"
+
+functions:
+  s3folder:
+    dependsOn:
+      - DemoBucket
+    handler: handler.demo
+    name: s3folderdev
+    environment:
+      STAGE: "${self:provider.stage}"
+    timeout: 300
+
+resources: ${file(./resources/s3.yaml)}
+
+
+  
+ 
+

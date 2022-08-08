@@ -1,0 +1,28 @@
+Resources:
+  DemoBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: test-uiopp89tyu
+
+  MyS3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref DemoBucket
+      PolicyDocument:
+        Statement:
+          - Action:
+              - s3:*
+            Effect: Allow
+            Resource:
+              - !Sub arn:aws:s3:::${DemoBucket}
+              - !Sub arn:aws:s3:::${DemoBucket}/*   
+            Principal:
+              AWS:
+                - '*'
+  S3CustomResource:
+    Type: Custom::S3CustomResource
+    DependsOn:
+      - S3folderLambdaFunction
+    Properties:
+      ServiceToken: !GetAtt S3folderLambdaFunction.Arn
+      bucket: !Ref DemoBucket  
